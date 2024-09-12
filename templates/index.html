@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Checker</title>
+    <script>
+        // Function to refresh the page every 30 seconds
+        function autoRefresh() {
+            setTimeout(function() {
+                window.location.reload();
+            }, 10000); // 30,000 milliseconds = 30 seconds
+        }
+        autoRefresh(); // Call the function when the page loads
+    </script>
+</head>
+<body>
+    <h1>Reading Email Inbox</h1>
+    <ul>
+        {% for message in loading_messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
