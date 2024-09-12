@@ -18,11 +18,12 @@ def email_checker():
 
 @app.route('/')
 def index():
-    return render_template('index.html', loading_messages=loading_messages)
+    email_checker()
+    #return render_template('index.html', loading_messages=loading_messages)
 
 if __name__ == "__main__":
-    email_thread = threading.Thread(target=email_checker)
-    email_thread.daemon = True
-    email_thread.start()
+    #email_thread = threading.Thread(target=email_checker)
+    #email_thread.daemon = True
+    #email_thread.start()
     app.run(debug=True)
     
