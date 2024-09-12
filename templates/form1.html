@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPC Risk Fraud Account Restore Request</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #00B163;
+            color: #302C3A;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 70%;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #302C3A;
+        }
+        .header .icon-wrapper {
+            margin-top: 10px;
+        }
+        .header .icon-wrapper .complaint-icon {
+            font-size: 50px;
+            color: #302C3A;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .form-group select {
+            background-color: #302C3A; /* Dropdown background color */
+            color: white; /* Dropdown text color */
+            border: 1px solid #302C3A; /* Border color matching the background */
+            width: 100%;
+        }
+        .form-group select option {
+            background-color: #fff; /* Option background color */
+            color: #302C3A; /* Option text color */
+        }
+        .form-group.double {
+            display: flex;
+            gap: 15px; /* Space between side-by-side fields */
+        }
+        .form-group.double > div {
+            flex: 1;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+        .button {
+            background-color: #302C3A;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+        .button:hover {
+            background-color: #00B163;
+        }
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            text-align: center;
+        }
+        .popup .message {
+            margin-bottom: 15px;
+        }
+        .popup .close-btn {
+            background-color: #302C3A;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .popup .close-btn:hover {
+            background-color: #00B163;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon-wrapper">
+                <i class="complaint-icon fas fa-clipboard-list"></i>
+            </div>
+        </div>
+        <form id="form1" action="{{ url_for('form', form_type='form1') }}" method="post" enctype="multipart/form-data" onsubmit="return handleSubmit();">
+            <input type="hidden" name="guid" value="{{ guid }}">
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+            <div class="form-group">
+                <select name="form_type" id="form_type" onchange="location.href=this.value;">
+                    <option value="{{ url_for('form', form_type='form1', guid=request.args.get('guid')) }}" selected>EPC Risk
+                        Fraud Account Restore Request</option>
+                    <option value="{{ url_for('form', form_type='form2', guid=request.args.get('guid')) }}">EPC Risk
+                        Ownership Device Restore</option>
+                    <option value="{{ url_for('form', form_type='form3', guid=request.args.get('guid')) }}">EPC Raast
+                        Money Sending Complaint</option>
+                    <option value="{{ url_for('form', form_type='form4', guid=request.args.get('guid')) }}">EPC
+                        Bill Complaint</option>
+                    <option value="{{ url_for('form', form_type='form5', guid=request.args.get('guid')) }}">EPC
+                        Account Opening Complaint</option>
+                    <option value="{{ url_for('form', form_type='unidentified', guid=request.args.get('guid')) }}">Unidentified</option>
+                </select>
+            </div>
+            <div class="form-group double">
+                <div>
+                    <label for="msisdn">MSISDN:</label>
+                    <input type="text" id="msisdn" name="msisdn" value="{{ form_data['msisdn'] }}" required>
+                </div>
+                <div>
+                    <label for="channel">Channel:</label>
+                    <input type="text" id="channel" name="channel" value="{{ form_data['channel'] }}" required>
+                </div>
+            </div>
+            <div class="form-group double">
+                <div>
+                    <label for="customer_location">Customer Location:</label>
+                    <input type="text" id="customer_location" name="customer_location" value="{{ form_data['customer_location'] }}" required>
+                </div>
+                <div>
+                    <label for="blocking_reason">Blocking Reason:</label>
+                    <input type="text" id="blocking_reason" name="blocking_reason" value="{{ form_data['blocking_reason'] }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments">{{ form_data['comments'] }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="cnic_scan">CNIC Scan (PDF only):</label>
+                <input type="file" id="cnic_scan" name="cnic_scan" accept=".pdf" required>
+            </div>
+            <button type="submit" class="button">Submit</button>
+        </form>
+        <div id="confirmation" class="popup">
+            <div class="message">Your submission was successful. You will be redirected to the form.</div>
+            <button class="close-btn" onclick="redirectToForm()">Back to Form</button>
+        </div>
+        <div id="popup" class="popup">
+            <div class="message">Please send another email for another complaint.</div>
+            <button class="close-btn" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+    <script>
+        function showConfirmation() {
+            document.getElementById('confirmation').style.display = 'block';
+        }
+
+        function redirectToForm() {
+            document.getElementById('confirmation').style.display = 'none';
+            window.location.href = "{{ url_for('form', form_type='form1') }}";
+        }
+
+        function showPopup() {
+            // Reset form fields
+            document.getElementById('form1').reset();
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function handleSubmit() {
+            var url = window.location.href;
+            if (url.includes('guid=')) {
+                // Proceed with form submission if GUID is present
+                redirectToForm();
+                return true;
+            } else {
+                // Show popup if GUID is not present
+                showPopup();
+                return false; // Prevent form submission
+            }
+        }
+    </script>
+</body>
+</html>
